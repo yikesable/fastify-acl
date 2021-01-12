@@ -2,9 +2,9 @@
 
 const fastify = require('fastify')()
 
-const aclFactory = require('fastify-acl-auth')
+const aclFactory = require('..')
 
-const hierarchyAcl = aclFactory({hierarchy: ['user', 'admin', 'superuser']})
+const hierarchyAcl = aclFactory({ hierarchy: ['user', 'admin', 'superuser'] })
 
 const credentials = {
   id: 'bc965eb1-a8a4-4320-9172-726e9a7e83c9',
@@ -12,9 +12,9 @@ const credentials = {
   roles: 'admin'
 }
 
-fastify.decorateRequest('session', {credentials})
+fastify.decorateRequest('session', { credentials })
 
-fastify.register(function (fastifyScope, opts, next) {
+fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     hierarchyAcl,
     {
@@ -22,13 +22,10 @@ fastify.register(function (fastifyScope, opts, next) {
     }
   )
   // 200, because 'admin' > 'user' in hierarchy
-  fastifyScope.get('/user', function (request, reply) {
-    return reply.send('/user')
-  })
-  next()
+  fastifyScope.get('/user', (_request, reply) => reply.send('/user'))
 })
 
-fastify.register(function (fastifyScope, opts, next) {
+fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     hierarchyAcl,
     {
@@ -36,13 +33,10 @@ fastify.register(function (fastifyScope, opts, next) {
     }
   )
   // 200
-  fastifyScope.get('/admin', function (request, reply) {
-    return reply.send('/admin')
-  })
-  next()
+  fastifyScope.get('/admin', (_request, reply) => reply.send('/admin'))
 })
 
-fastify.register(function (fastifyScope, opts, next) {
+fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     hierarchyAcl,
     {
@@ -50,13 +44,10 @@ fastify.register(function (fastifyScope, opts, next) {
     }
   )
   // 403
-  fastifyScope.get('/superuser', function (request, reply) {
-    return reply.send('/superuser')
-  })
-  next()
+  fastifyScope.get('/superuser', (_request, reply) => reply.send('/superuser'))
 })
 
-fastify.listen(8080, function (err) {
+fastify.listen(8080, err => {
   if (err) throw err
   console.log('listening on %s', fastify.server.address().port)
 })

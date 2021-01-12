@@ -2,36 +2,33 @@
 
 const fastify = require('fastify')
 
-let fastifyInstance
-
 const tap = require('tap')
-const test = tap.test
 
 const plugin = require('../plugin')
 
 const defaultPlugin = plugin()
 
-fastifyInstance = fastify()
+const fastifyInstance = fastify()
 
-test(async t => {
+tap.test(async t => {
   t.ok(defaultPlugin, 'plugin exists')
-  fastifyInstance.decorateRequest('session', {credentials: {roles: ['user']}})
-  fastifyInstance.register(function (f, o, n) {
-    f.register(plugin({allowedRoles: ['user']}))
+  fastifyInstance.decorateRequest('session', { credentials: { roles: ['user'] } })
+  fastifyInstance.register(function (f, _o, n) {
+    f.register(plugin({ allowedRoles: ['user'] }))
     f.get('/user', async function () {
       return '/user'
     })
     n()
   })
-  fastifyInstance.register(function (f, o, n) {
-    f.register(plugin({allowedRoles: ['admin']}))
+  fastifyInstance.register(function (f, _o, n) {
+    f.register(plugin({ allowedRoles: ['admin'] }))
     f.get('/admin', async function () {
       return '/admin'
     })
     n()
   })
-  fastifyInstance.register(function (f, o, n) {
-    f.register(plugin({allowedRoles: function(){return Symbol('foo')}}))
+  fastifyInstance.register(function (f, _o, n) {
+    f.register(plugin({ allowedRoles: () => Symbol('foo') }))
     f.get('/symbol', async function () {
       return '/symbol'
     })
