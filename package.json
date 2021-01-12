@@ -13,7 +13,7 @@
     "check:lint": "eslint .",
     "check:tsc": "tsc",
     "check": "run-s clean && run-p check:*",
-    "clean:declarations": "rm -rf $(find . -maxdepth 2 -type f -name '*.d.ts')",
+    "clean:declarations": "rm -rf $(find . -maxdepth 2 -type f -name '*.d.ts*')",
     "clean": "run-p clean:*",
     "prepublishOnly": "run-s build",
     "test:tap": "tap 'test/**/*.test.js' --cov",
@@ -26,6 +26,14 @@
   },
   "author": "Charles Read",
   "license": "MIT",
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "*.d.ts.map",
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "lib/**/*.d.ts.map"
+  ],
   "engines": {
     "node": ">=12.0.0"
   },
