@@ -9,11 +9,13 @@
   },
   "author": "Charles Read",
   "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "dependencies": {
     "debug": "^4.3.1",
     "fastify-plugin": "^1.6.1",
     "fastify-url-data": "^2.4.0",
-    "type-detect": "^4.0.8",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
@@ -43,8 +45,5 @@
     "fastify",
     "acl",
     "authorization"
-  ],
-  "engines": {
-    "node": ">=12.0.0"
-  }
+  ]
 }
