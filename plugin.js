@@ -23,7 +23,7 @@ const defaults = {
 
 const hookFactory = function (fastify, options) {
 
-  const urlPatterns = options.pathExempt.map(function (pathPattern) {
+  const urlPatterns = (options.pathExempt || []).map(function (pathPattern) {
     return new urlPattern(pathPattern)
   })
 

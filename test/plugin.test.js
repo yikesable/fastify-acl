@@ -1,7 +1,6 @@
 'use strict'
 
 const fastify = require('fastify')
-const request = require('request')
 
 let fastifyInstance
 
@@ -10,26 +9,11 @@ const test = tap.test
 
 const plugin = require('../plugin')
 
-const pluginDefaults = {
-  actualRoles: function (request) {
-    let _return
-    try {
-      _return = request.session.credentials.roles
-    } catch (err) {
-      _return = []
-    }
-    return _return
-  },
-  any: true,
-  all: false
-}
-
 const defaultPlugin = plugin()
 
 fastifyInstance = fastify()
 
-test(function (t) {
-  t.plan(7)
+test(async t => {
   t.ok(defaultPlugin, 'plugin exists')
   fastifyInstance.decorateRequest('session', {credentials: {roles: ['user']}})
   fastifyInstance.register(function (f, o, n) {
@@ -53,30 +37,18 @@ test(function (t) {
     })
     n()
   })
-  fastifyInstance.listen('8765', function () {
-    request({
-      uri: 'http://localhost:8765/user'
-    },
-      function (err, response, body) {
-        if (err) throw err
-        t.not(err, 'no request error')
-        t.is(body, '/user', 'body should be  /user')
-        request({
-          uri: 'http://localhost:8765/admin'
-        },
-          function (err, response, body) {
-            if (err) throw err
-            t.is(response.statusCode, 403, 'admin should return 403')
-            fastifyInstance.close(t.end)
-            // request({
-            //     uri: 'http://localhost:8765/symbol'
-            //   },
-            //   function (err, response, body) {
-            //     if (err) throw err
-            //     t.is(response.statusCode, 500, 'bs symbol in allowedRoles should cause error')
-            //     fastifyInstance.close(t.end)
-            //   })
-          })
-      })
+  await t.test('get /user', async t => {
+    const response = await fastifyInstance.inject({
+      method: 'GET',
+      url: '/user',
+    })
+    t.is(response.body, '/user', 'body should be /user')
+  })
+  await t.test('get /admin', async t => {
+    const response = await fastifyInstance.inject({
+      method: 'GET',
+      url: '/admin',
+    })
+    t.is(response.statusCode, 403, 'admin should return 403')
   })
 })
