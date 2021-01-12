@@ -76,7 +76,7 @@ const pluginFactory = function (options) {
       fastify.addHook('preHandler', hook)
     },
     {
-      fastify: '>=1.0.0'
+      fastify: '>=3.0.0'
     }
   )
 }
