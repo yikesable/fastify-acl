@@ -31,9 +31,6 @@ fastifyInstance = fastify()
 test(function (t) {
   t.plan(7)
   t.ok(defaultPlugin, 'plugin exists')
-  t.deepEquals(defaultPlugin.options.any, pluginDefaults.any, 'any is expected')
-  t.deepEquals(defaultPlugin.options.all, pluginDefaults.all, 'all is expected')
-  t.same(defaultPlugin.options.actualRoles(), [], 'no actual roles by default')
   fastifyInstance.decorateRequest('session', {credentials: {roles: ['user']}})
   fastifyInstance.register(function (f, o, n) {
     f.register(plugin({allowedRoles: ['user']}))

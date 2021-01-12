@@ -21,8 +21,6 @@ const defaults = {
   all: false
 }
 
-let instanceOptions
-
 const hookFactory = function (fastify, options) {
 
   const urlPatterns = options.pathExempt.map(function (pathPattern) {
@@ -64,23 +62,19 @@ const hookFactory = function (fastify, options) {
   }
 }
 
-const plugin = async function (fastify, options) {
-  debug('plugin() called')
-  fastify.register(require('fastify-url-data'))
-  const pluginOptions = Object.assign({}, instanceOptions, options)
-  debug('pluginOptions: %j', pluginOptions)
-  plugin.options = pluginOptions
-  const hook = hookFactory(fastify, pluginOptions)
-  fastify.addHook('preHandler', hook)
-}
-
 const pluginFactory = function (options) {
   debug('pluginFactory() called')
-  instanceOptions = Object.assign({}, defaults, options)
+  const instanceOptions = Object.assign({}, defaults, options)
   debug('instanceOptions: %j', instanceOptions)
-  plugin.options = instanceOptions
   return fp(
-    plugin,
+    async function (fastify, options) {
+      debug('plugin() called')
+      fastify.register(require('fastify-url-data'))
+      const pluginOptions = Object.assign({}, instanceOptions, options)
+      debug('pluginOptions: %j', pluginOptions)
+      const hook = hookFactory(fastify, pluginOptions)
+      fastify.addHook('preHandler', hook)
+    },
     {
       fastify: '>=1.0.0'
     }
