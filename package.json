@@ -12,12 +12,20 @@
     "test:tap": "tap 'test/**/*.test.js' --cov",
     "test": "run-s check test:*",
     "prepublishOnly": "run-s build",
-    "clean:declarations": "rm -rf $(find . -maxdepth 2 -type f -name '*.d.ts')",
+    "clean:declarations": "rm -rf $(find . -maxdepth 2 -type f -name '*.d.ts*')",
     "clean": "run-p clean:*",
     "build:1-declaration": "tsc -p declaration.tsconfig.json",
     "build:0": "run-s clean",
     "build": "run-s build:*"
   },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "*.d.ts.map",
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "lib/**/*.d.ts.map"
+  ],
   "husky": {
     "hooks": {
       "pre-push": "npm test"
