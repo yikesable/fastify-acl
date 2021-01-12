@@ -1,16 +1,15 @@
 'use strict'
 
-const fastify = require('fastify')
+const fastify = require('fastify').default
 
 const tap = require('tap')
 
-const plugin = require('../plugin')
+tap.test('plugin.test.js', async t => {
+  const plugin = require('../plugin')
 
-const defaultPlugin = plugin()
+  const defaultPlugin = plugin()
+  const fastifyInstance = fastify()
 
-const fastifyInstance = fastify()
-
-tap.test(async t => {
   t.ok(defaultPlugin, 'plugin exists')
   fastifyInstance.decorateRequest('session', { credentials: { roles: ['user'] } })
   fastifyInstance.register(function (f, _o, n) {
@@ -28,7 +27,7 @@ tap.test(async t => {
     n()
   })
   fastifyInstance.register(function (f, _o, n) {
-    f.register(plugin({ allowedRoles: () => Symbol('foo') }))
+    f.register(plugin({ allowedRoles: () => 'foo' }))
     f.get('/symbol', async function () {
       return '/symbol'
     })
