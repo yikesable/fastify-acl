@@ -73,7 +73,7 @@ const hookFactory = (options) => {
 
 /**
  * @param {FastifyAclAuthOptions} [options]
- * @returns {import('fastify').FastifyPluginAsync}
+ * @returns {import('fastify').FastifyPluginAsync<FastifyAclAuthOptions>}
  */
 const pluginFactory = function (options = {}) {
   debug('pluginFactory() called')
@@ -84,7 +84,7 @@ const pluginFactory = function (options = {}) {
 
   debug('instanceOptions: %j', instanceOptions)
 
-  /** @type {import('fastify').FastifyPluginAsync} */
+  /** @type {import('fastify').FastifyPluginAsync<FastifyAclAuthOptions>} */
   const plugin = async function (fastify, options) {
     debug('plugin() called')
 
