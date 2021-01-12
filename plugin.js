@@ -11,7 +11,7 @@ const { getRoles } = require('./lib/util')
  * @typedef HookFactoryOptions
  * @property {import('./lib/util').RoleArgument} [actualRoles]
  * @property {import('./lib/util').RoleArgument} [allowedRoles]
- * @property {string[]} [pathExempt]
+ * @property {ReadonlyArray<string>} [pathExempt]
  */
 
 /** @typedef {HookFactoryOptions & import('./lib/auth').CheckRolesOptions} FastifyAclAuthOptions */
