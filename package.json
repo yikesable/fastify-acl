@@ -18,7 +18,19 @@
   },
   "devDependencies": {
     "fastify": "^2.15.3",
-    "tap": "^14.11.0"
+    "tap": "^14.11.0",
+    "eslint-plugin-unicorn": "^24.0.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-jsdoc": "^30.7.13",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-es": "^4.1.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint": "^7.17.0",
+    "@voxpelli/eslint-config-jsdoc-ts": "^0.3.1",
+    "@voxpelli/eslint-config": "^10.0.0"
   },
   "repository": {
     "type": "git",
