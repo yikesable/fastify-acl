@@ -5,13 +5,14 @@ const debug = require('debug')('fastify-acl-auth:plugin')
 const UrlPattern = require('url-pattern')
 
 const { checkRoles } = require('./lib/auth')
-const { getRoles } = require('./lib/util')
+const { getRoles, HttpError } = require('./lib/util')
 
 /**
  * @typedef HookFactoryOptions
  * @property {import('./lib/util').RoleArgument} [actualRoles]
  * @property {import('./lib/util').RoleArgument} [allowedRoles]
  * @property {ReadonlyArray<string>} [pathExempt]
+ * @property {number} [httpErrorCode]
  */
 
 /** @typedef {HookFactoryOptions & import('./lib/auth').CheckRolesOptions} FastifyAclAuthOptions */
@@ -31,7 +32,8 @@ const defaults = {
 const hookFactory = (options) => {
   const {
     actualRoles,
-    allowedRoles
+    allowedRoles,
+    httpErrorCode = 403
   } = options;
 
   const urlPatterns = (options.pathExempt || []).map(pathPattern => new UrlPattern(pathPattern))
@@ -66,8 +68,9 @@ const hookFactory = (options) => {
     debug('allowed: %j', allowed)
     debug('isAuthorized: %j', isAuthorized)
 
-    // TODO: Make code configurable. Maybe throw an error object instead?
-    return isAuthorized ? undefined : reply.code(403).send()
+    return isAuthorized
+      ? undefined
+      : reply.send(new HttpError(httpErrorCode))
   }
 }
 
