@@ -1,6 +1,6 @@
 {
   "name": "@voxpelli/fastify-acl-auth",
-  "version": "2.0.0-0",
+  "version": "2.0.0-1",
   "description": "ACL-like authorization for Fastify apps",
   "main": "plugin.js",
   "types": "plugin.d.ts",
