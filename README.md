@@ -1,9 +1,6 @@
-# fastify-acl-auth
+# @voxpelli/fastify-acl-auth
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/charlesread/fastify-acl-auth.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/charlesread/fastify-acl-auth.svg?branch=master)](https://travis-ci.org/charlesread/fastify-acl-auth)
-[![Coverage Status](https://coveralls.io/repos/github/charlesread/fastify-acl-auth/badge.svg?branch=master)](https://coveralls.io/github/charlesread/fastify-acl-auth?branch=master)
-[![NPM downloads](https://img.shields.io/npm/dm/fastify-acl-auth.svg?style=flat)](https://www.npmjs.com/package/fastify-acl-auth)
+**Temporary(?) fork of [*fastify-acl-auth*](https://github.com/charlesread/fastify-acl-auth)**
 
 ACL-like authorization for [*fastify*](https://fastify.io) apps.
 
@@ -40,7 +37,7 @@ You can use *fastify-acl-auth* in a few ways, ways that depend on how you want t
 
 const fastify = require('fastify')()
 
-const aclFactory = require('fastify-acl-auth')
+const aclFactory = require('@voxpelli/fastify-acl-auth')
 
 const credentials = {
   id: 'bc965eb1-a8a4-4320-9172-726e9a7e83c9',
@@ -94,7 +91,7 @@ fastify.listen(8080, function (err) {
 
 const fastify = require('fastify')()
 
-const aclFactory = require('fastify-acl-auth')
+const aclFactory = require('@voxpelli/fastify-acl-auth')
 
 const hierarchyAcl = aclFactory({hierarchy: ['user', 'admin', 'superuser']})
 
@@ -159,8 +156,8 @@ fastify.listen(8080, function (err) {
 
 _fastify-acl-auth_ exports a factory function; a function that _makes_ the plugin that you'll use.
 ```js
-const aclFactory = require('fastify-acl-auth')
-``` 
+const aclFactory = require('@voxpelli/fastify-acl-auth')
+```
 ### `options`
 
 `options` is a simple object with the following properties:
@@ -184,17 +181,3 @@ fastify.register(aclFactory([options]), [options])
 Nope, that's not a typo, `options` is there twice;  `aclFactory([options])` is setting the options of your _plugin instance_, whereas passing `options` during _registration_ is setting, or overriding, the _plugin instance_ options for _that registration_ of the plugin instance.  So you can create an instance of `fastify-acl-auth` and "carry it around with you" for later use.  Passing `options` _when you register_ the plugin will _override_ the `options` set when creating the plugin instance with the factory function.
 
 Lots of words, right?  This architecture really comes from the architecture (really talking about scoping here) of `fastify` itself, and should make sense with a [basic knowledge of scoping](https://www.fastify.io/docs/latest/Plugins/).  It's actually very logical when it sinks in.
-
-## Use with _fastify-auth_
-All of the actual logic that used in _fastify-acl-auth_ is contained in `lib/auth.js`, it exports a function with signature `function(actualRoles, allowedRoles[, options])` that simply returns a `boolean`, which can be used _anywhere_.
-
-```js
-const auth = require('fastify-acl-auth/lib/auth')
-auth(['user'], ['admin','user'], {any: true})
-// true
-auth(['foo'], ['bar','baz'], {any: true})
-// false
-auth(async function () {return ['admin']}, ['user'], {hierarchy: ['user', 'admin']})
-// true
-// et cetera
-```
