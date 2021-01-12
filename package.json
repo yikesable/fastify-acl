@@ -7,10 +7,16 @@
     "check:dependency-check": "dependency-check *.js 'example/**/*.js' 'lib/**/*.js' 'test/**/*.js' --no-dev",
     "check:installed-check": "installed-check ",
     "check:lint": "eslint .",
-    "check": "run-p check:*",
+    "check:tsc": "tsc",
+    "check": "run-s clean && run-p check:*",
     "test:tap": "tap 'test/**/*.test.js' --cov",
     "test": "run-s check test:*",
-    "check:tsc": "tsc"
+    "prepublishOnly": "run-s build",
+    "clean:declarations": "rm -rf $(find . -maxdepth 2 -type f -name '*.d.ts')",
+    "clean": "run-p clean:*",
+    "build:1-declaration": "tsc -p declaration.tsconfig.json",
+    "build:0": "run-s clean",
+    "build": "run-s build:*"
   },
   "husky": {
     "hooks": {
@@ -28,6 +34,9 @@
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/node": "^12.0.0",
+    "@types/tap": "^14.10.1",
     "@voxpelli/eslint-config": "^10.0.0",
     "@voxpelli/eslint-config-jsdoc-ts": "^0.3.1",
     "dependency-check": "^4.1.0",
@@ -46,10 +55,7 @@
     "installed-check": "^3.0.0",
     "npm-run-all": "^4.1.5",
     "tap": "^14.11.0",
-    "typescript": "^4.1.3",
-    "@types/tap": "^14.10.1",
-    "@types/node": "^12.0.0",
-    "@types/debug": "^4.1.5"
+    "typescript": "^4.1.3"
   },
   "repository": {
     "type": "git",
@@ -62,5 +68,9 @@
     "fastify",
     "acl",
     "authorization"
-  ]
+  ],
+  "types": "plugin.d.ts",
+  "peerDependencies": {
+    "fastify": "^3.9.2"
+  }
 }

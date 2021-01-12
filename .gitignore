@@ -5,3 +5,7 @@ coverage
 
 /package-lock.json
 /yarn.lock
+
+# Generated types
+*.d.ts
+*.d.ts.map
