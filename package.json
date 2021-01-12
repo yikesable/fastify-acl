@@ -1,5 +1,5 @@
 {
-  "name": "fastify-acl-auth",
+  "name": "@voxpelli/fastify-acl-auth",
   "version": "1.4.0",
   "description": "ACL-like authorization for Fastify apps",
   "main": "plugin.js",
@@ -24,10 +24,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/charlesread/fastify-acl-auth"
+    "url": "https://github.com/voxpelli/fastify-acl-auth"
   },
   "bugs": {
-    "url": "https://github.com/charlesread/fastify-acl-auth/issues"
+    "url": "https://github.com/voxpelli/fastify-acl-auth/issues"
   },
   "keywords": [
     "fastify",
