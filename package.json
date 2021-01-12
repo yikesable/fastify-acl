@@ -4,8 +4,17 @@
   "description": "ACL-like authorization for Fastify apps",
   "main": "plugin.js",
   "scripts": {
-    "test": "tap 'test/**/*.test.js' --cov",
-    "pretty": "npm test -- --cov --coverage-report=lcov"
+    "check:dependency-check": "dependency-check *.js 'example/**/*.js' 'lib/**/*.js' 'test/**/*.js' --no-dev",
+    "check:installed-check": "installed-check ",
+    "check:lint": "eslint .",
+    "check": "run-p check:*",
+    "test:tap": "tap 'test/**/*.test.js' --cov",
+    "test": "run-s check test:*"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test"
+    }
   },
   "author": "Charles Read",
   "license": "MIT",
@@ -21,6 +30,7 @@
   "devDependencies": {
     "@voxpelli/eslint-config": "^10.0.0",
     "@voxpelli/eslint-config-jsdoc-ts": "^0.3.1",
+    "dependency-check": "^4.1.0",
     "eslint": "^7.17.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-es": "^4.1.0",
@@ -32,6 +42,9 @@
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-unicorn": "^24.0.0",
     "fastify": "^2.15.3",
+    "husky": "^4.3.7",
+    "installed-check": "^3.0.0",
+    "npm-run-all": "^4.1.5",
     "tap": "^14.11.0"
   },
   "repository": {
