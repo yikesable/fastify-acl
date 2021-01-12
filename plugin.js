@@ -2,7 +2,7 @@
 
 const fp = require('fastify-plugin')
 const debug = require('debug')('fastify-acl-auth:plugin')
-const urlPattern = require('url-pattern')
+const UrlPattern = require('url-pattern')
 
 const auth = require('./lib/auth')
 const util = require('./lib/util')
@@ -12,7 +12,7 @@ const defaults = {
     let _return
     try {
       _return = request.session.credentials.roles
-    } catch (err) {
+    } catch {
       _return = []
     }
     return _return
@@ -21,20 +21,10 @@ const defaults = {
   all: false
 }
 
-const hookFactory = function (fastify, options) {
+const hookFactory = function (_fastify, options) {
+  const urlPatterns = (options.pathExempt || []).map(pathPattern => new UrlPattern(pathPattern))
 
-  const urlPatterns = (options.pathExempt || []).map(function (pathPattern) {
-    return new urlPattern(pathPattern)
-  })
-
-  function pathExempt(_path) {
-    for (let i = 0; i < urlPatterns.length; i++) {
-      if (urlPatterns[i].match(_path)) {
-        return true
-      }
-    }
-    return false
-  }
+  const pathExempt = (path) => urlPatterns.some(urlPattern => urlPattern.match(path));
 
   return async function (request, reply) {
     debug(`hook called for ${request.raw.originalUrl}`)
@@ -43,9 +33,9 @@ const hookFactory = function (fastify, options) {
       const _allowed = await util.getRoles(options.allowedRoles, request)
       let isAuthorized = await auth.isAuthorized(_actual, _allowed, options)
       if (options.pathExempt) {
-        debug(`options.pathExempt is set`)
+        debug('options.pathExempt is set')
         if (pathExempt(request.raw.originalUrl)) {
-          debug(`options.pathExempt does match URL, overriding isAuthorized (setting to true)`)
+          debug('options.pathExempt does match URL, overriding isAuthorized (setting to true)')
           isAuthorized = true
         }
       }

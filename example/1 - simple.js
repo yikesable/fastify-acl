@@ -2,7 +2,7 @@
 
 const fastify = require('fastify')()
 
-const aclFactory = require('fastify-acl-auth')
+const aclFactory = require('..')
 
 const credentials = {
   id: 'bc965eb1-a8a4-4320-9172-726e9a7e83c9',
@@ -10,9 +10,9 @@ const credentials = {
   roles: 'vendor'
 }
 
-fastify.decorateRequest('session', {credentials})
+fastify.decorateRequest('session', { credentials })
 
-fastify.register(function (fastifyScope, opts, next) {
+fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     aclFactory(
       {
@@ -21,13 +21,10 @@ fastify.register(function (fastifyScope, opts, next) {
     )
   )
   // 403
-  fastifyScope.get('/customers', function (request, reply) {
-    return reply.send('/customers')
-  })
-  next()
+  fastifyScope.get('/customers', (_request, reply) => reply.send('/customers'))
 })
 
-fastify.register(function (fastifyScope, opts, next) {
+fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     aclFactory(
       {
@@ -36,13 +33,10 @@ fastify.register(function (fastifyScope, opts, next) {
     )
   )
   // 200
-  fastifyScope.get('/vendors', function (request, reply) {
-    return reply.send('/vendors')
-  })
-  next()
+  fastifyScope.get('/vendors', (_request, reply) => reply.send('/vendors'))
 })
 
-fastify.listen(8080, function (err) {
+fastify.listen(8080, err => {
   if (err) throw err
   console.log('listening on %s', fastify.server.address().port)
 })
