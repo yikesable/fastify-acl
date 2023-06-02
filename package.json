@@ -41,9 +41,9 @@
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.5",
+    "@types/debug": "^4.1.8",
     "@types/node": "^16.18.34",
-    "@types/tap": "^14.10.1",
+    "@types/tap": "^14.10.3",
     "@voxpelli/eslint-config": "^17.0.3",
     "@voxpelli/tsconfig": "^8.0.0",
     "eslint": "^8.41.0",
