@@ -7,7 +7,7 @@ const aclFactory = require('..')
 const credentials = {
   id: 'bc965eb1-a8a4-4320-9172-726e9a7e83c9',
   username: 'cread',
-  roles: 'vendor'
+  roles: 'vendor',
 }
 
 fastify.decorateRequest('session', { credentials })
@@ -16,7 +16,7 @@ fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     aclFactory(
       {
-        allowedRoles: ['customer']
+        allowedRoles: ['customer'],
       }
     )
   )
@@ -28,7 +28,7 @@ fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     aclFactory(
       {
-        allowedRoles: ['vendor']
+        allowedRoles: ['vendor'],
       }
     )
   )

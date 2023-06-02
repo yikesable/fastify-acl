@@ -5,7 +5,7 @@ const debug = require('debug')('fastify-acl-auth:plugin')
 const UrlPattern = require('url-pattern')
 
 const { checkRoles } = require('./lib/auth')
-const { getRoles, HttpError } = require('./lib/util')
+const { HttpError, getRoles } = require('./lib/util')
 
 /**
  * @typedef HookFactoryOptions
@@ -22,7 +22,7 @@ const defaults = {
   actualRoles: request =>
     // @ts-ignore
     (((request || {}).session || {}).credentials || {}).roles || [],
-  all: false
+  all: false,
 }
 
 /**
@@ -33,7 +33,7 @@ const hookFactory = (options) => {
   const {
     actualRoles,
     allowedRoles,
-    httpErrorCode = 403
+    httpErrorCode = 403,
   } = options;
 
   const urlPatterns = (options.pathExempt || []).map(pathPattern => new UrlPattern(pathPattern))
@@ -50,7 +50,7 @@ const hookFactory = (options) => {
 
     const [actual, allowed] = await Promise.all([
       getRoles(actualRoles, request),
-      getRoles(allowedRoles, request)
+      getRoles(allowedRoles, request),
     ]);
 
     let isAuthorized;
@@ -82,7 +82,7 @@ const pluginFactory = function (options = {}) {
   debug('pluginFactory() called')
   const instanceOptions = {
     ...defaults,
-    ...options
+    ...options,
   };
 
   debug('instanceOptions: %j', instanceOptions)
@@ -93,7 +93,7 @@ const pluginFactory = function (options = {}) {
 
     const pluginOptions = {
       ...instanceOptions,
-      ...options
+      ...options,
     };
 
     debug('pluginOptions: %j', pluginOptions)

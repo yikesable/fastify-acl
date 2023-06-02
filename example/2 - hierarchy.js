@@ -9,7 +9,7 @@ const hierarchyAcl = aclFactory({ hierarchy: ['user', 'admin', 'superuser'] })
 const credentials = {
   id: 'bc965eb1-a8a4-4320-9172-726e9a7e83c9',
   username: 'cread',
-  roles: 'admin'
+  roles: 'admin',
 }
 
 fastify.decorateRequest('session', { credentials })
@@ -18,7 +18,7 @@ fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     hierarchyAcl,
     {
-      allowedRoles: ['user']
+      allowedRoles: ['user'],
     }
   )
   // 200, because 'admin' > 'user' in hierarchy
@@ -29,7 +29,7 @@ fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     hierarchyAcl,
     {
-      allowedRoles: ['admin']
+      allowedRoles: ['admin'],
     }
   )
   // 200
@@ -40,7 +40,7 @@ fastify.register(async (fastifyScope) => {
   fastifyScope.register(
     hierarchyAcl,
     {
-      allowedRoles: ['superuser']
+      allowedRoles: ['superuser'],
     }
   )
   // 403
