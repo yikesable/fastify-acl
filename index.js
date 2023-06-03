@@ -1,3 +1,5 @@
+// TODO: Extract exmaple from README to a standalone file which is then injected into the README using remark-cli and remark-usage
+
 import createDebug from 'debug';
 import fp from 'fastify-plugin';
 import UrlPattern from 'url-pattern';
