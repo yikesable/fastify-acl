@@ -1,8 +1,6 @@
-'use strict'
+import tap from 'tap'
 
-const tap = require('tap')
-
-const { checkRoles } = require('../lib/auth')
+import { checkRoles } from '../lib/auth.js'
 
 tap.test('auth.test.js', t => {
   t.plan(10)

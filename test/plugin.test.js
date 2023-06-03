@@ -1,35 +1,27 @@
-'use strict'
+import fastify from 'fastify'
+import tap from 'tap'
 
-const fastify = require('fastify').default
+import { fastifyAclAuth as plugin } from '../plugin.js'
 
-const tap = require('tap')
+/** @type {import('../plugin.js').ActualRolesCallback} */
+const actualRoles = () => 'user';
 
 tap.test('plugin.test.js', async t => {
-  const plugin = require('../plugin')
-
-  const defaultPlugin = plugin()
+  const defaultPlugin = plugin({ actualRoles })
   const fastifyInstance = fastify()
 
   t.ok(defaultPlugin, 'plugin exists')
-  fastifyInstance.decorateRequest('session', { credentials: { roles: ['user'] } })
   fastifyInstance.register(function (f, _o, n) {
-    f.register(plugin({ allowedRoles: ['user'] }))
+    f.register(plugin({ allowedRoles: ['user'], actualRoles }))
     f.get('/user', async function () {
       return '/user'
     })
     n()
   })
   fastifyInstance.register(function (f, _o, n) {
-    f.register(plugin({ allowedRoles: ['admin'] }))
+    f.register(plugin({ allowedRoles: ['admin'], actualRoles }))
     f.get('/admin', async function () {
       return '/admin'
-    })
-    n()
-  })
-  fastifyInstance.register(function (f, _o, n) {
-    f.register(plugin({ allowedRoles: () => 'foo' }))
-    f.get('/symbol', async function () {
-      return '/symbol'
     })
     n()
   })

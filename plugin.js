@@ -1,35 +1,37 @@
-'use strict'
+// FIXME: Rename file to index.js
 
-const fp = require('fastify-plugin').default
-const debug = require('debug')('fastify-acl-auth:plugin')
-const UrlPattern = require('url-pattern')
+import createDebug from 'debug';
+import fp from 'fastify-plugin'
+import UrlPattern from 'url-pattern'
 
-const { checkRoles } = require('./lib/auth')
-const { HttpError, getRoles } = require('./lib/util')
+import { checkRoles } from './lib/auth.js'
+import { HttpError } from './lib/util.js'
+
+const debug = createDebug('fastify-acl-auth:auth');
+
+/** @typedef {string|ReadonlyArray<string>} Roles */
+
+/**
+ * @callback ActualRolesCallback
+ * @param {import('fastify').FastifyRequest} request
+ * @returns {Promise<Roles>|Roles|undefined}
+ */
 
 /**
  * @typedef HookFactoryOptions
- * @property {import('./lib/util').RoleArgument} [actualRoles]
- * @property {import('./lib/util').RoleArgument} [allowedRoles]
+ * @property {ActualRolesCallback} actualRoles
+ * @property {Roles} [allowedRoles]
  * @property {ReadonlyArray<string>} [pathExempt]
  * @property {number} [httpErrorCode]
  */
-
-/** @typedef {HookFactoryOptions & import('./lib/auth').CheckRolesOptions} FastifyAclAuthOptions */
-
-/** @type {FastifyAclAuthOptions}  */
-const defaults = {
-  actualRoles: request =>
-    // @ts-ignore
-    (((request || {}).session || {}).credentials || {}).roles || [],
-  all: false,
-}
 
 /**
  * @param {FastifyAclAuthOptions} options
  * @returns {import('fastify').preHandlerHookHandler}
  */
-const hookFactory = (options) => {
+function createPreHandlerHook (options) {
+  debug('hookOptions: %j', options)
+
   const {
     actualRoles,
     allowedRoles,
@@ -38,70 +40,60 @@ const hookFactory = (options) => {
 
   const urlPatterns = (options.pathExempt || []).map(pathPattern => new UrlPattern(pathPattern))
 
-  /**
-   * @param {string} path
-   * @returns {boolean}
-   */
-  const pathExempt = (path) => urlPatterns.some(urlPattern => urlPattern.match(path));
+  const pathExempt = urlPatterns
+    ? /** @type {(path: string) => boolean} */ (path) => urlPatterns.some(urlPattern => urlPattern.match(path))
+    : undefined;
 
   /** @type {import('fastify').preHandlerHookHandler} */
   return async function (request, reply) {
     debug(`hook called for ${request.url}`)
 
-    const [actual, allowed] = await Promise.all([
-      getRoles(actualRoles, request),
-      getRoles(allowedRoles, request),
-    ]);
+    const actual = await actualRoles(request) || [];
 
+    /** @type {boolean} */
     let isAuthorized;
 
     if (pathExempt && pathExempt(request.url)) {
       debug('options.pathExempt does match URL, overriding isAuthorized (setting to true)')
       isAuthorized = true
-    }
-
-    if (isAuthorized === undefined) {
-      isAuthorized = await checkRoles(actual, allowed, options)
+    } else {
+      isAuthorized = checkRoles(actual, allowedRoles || [], options)
     }
 
     debug('actual: %j', actual)
-    debug('allowed: %j', allowed)
+    debug('allowed: %j', allowedRoles)
     debug('isAuthorized: %j', isAuthorized)
 
-    return isAuthorized
-      ? undefined
-      : reply.send(new HttpError(httpErrorCode))
+    if (!isAuthorized) {
+      return reply.send(new HttpError(httpErrorCode));
+    }
   }
 }
 
+/** @typedef {HookFactoryOptions & import('./lib/auth.js').CheckRolesOptions} FastifyAclAuthOptions */
+
+/** @typedef {import('fastify').FastifyPluginAsync<FastifyAclAuthOptions>} FastifyAclAuthPlugin */
+
 /**
- * @param {FastifyAclAuthOptions} [options]
- * @returns {import('fastify').FastifyPluginAsync<FastifyAclAuthOptions>}
+ * @param {FastifyAclAuthOptions} options
+ * @returns {FastifyAclAuthPlugin}
  */
-const pluginFactory = function (options = {}) {
-  debug('pluginFactory() called')
-  const instanceOptions = {
-    ...defaults,
-    ...options,
-  };
+export function fastifyAclAuth (options) {
+  debug('aclFactory() called')
+
+  const instanceOptions = { all: false, ...options };
 
   debug('instanceOptions: %j', instanceOptions)
 
   /** @type {import('fastify').FastifyPluginAsync<FastifyAclAuthOptions>} */
-  const plugin = async function (fastify, options) {
+  const plugin = async (fastify, pluginOptions) => {
     debug('plugin() called')
 
-    const pluginOptions = {
+    fastify.addHook('preHandler', createPreHandlerHook({
       ...instanceOptions,
-      ...options,
-    };
-
-    debug('pluginOptions: %j', pluginOptions)
-
-    fastify.addHook('preHandler', hookFactory(pluginOptions))
+      ...pluginOptions,
+    }))
   };
 
-  return fp(plugin, { fastify: '>=3.0.0' })
+  return fp(plugin, { fastify: '>=4.0.0' })
 }
-
-module.exports = pluginFactory

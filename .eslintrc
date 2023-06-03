@@ -1,5 +1,5 @@
 {
-  "extends": "@voxpelli",
+  "extends": "@voxpelli/eslint-config/esm",
   "root": true,
   "rules": {
     "semi": 0,
