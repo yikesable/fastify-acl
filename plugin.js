@@ -1,11 +1,11 @@
 // FIXME: Rename file to index.js
 
 import createDebug from 'debug';
-import fp from 'fastify-plugin'
-import UrlPattern from 'url-pattern'
+import fp from 'fastify-plugin';
+import UrlPattern from 'url-pattern';
 
-import { checkRoles } from './lib/auth.js'
-import { HttpError } from './lib/util.js'
+import { checkRoles } from './lib/auth.js';
+import { HttpError } from './lib/util.js';
 
 const debug = createDebug('fastify-acl-auth:auth');
 
@@ -46,7 +46,7 @@ const debug = createDebug('fastify-acl-auth:auth');
  * @returns {import('fastify').preHandlerHookHandler}
  */
 function createPreHandlerHook (options) {
-  debug('hookOptions: %j', options)
+  debug('hookOptions: %j', options);
 
   const {
     actualRoles,
@@ -54,7 +54,7 @@ function createPreHandlerHook (options) {
     httpErrorCode = 403,
   } = options;
 
-  const urlPatterns = (options.pathExempt || []).map(pathPattern => new UrlPattern(pathPattern))
+  const urlPatterns = (options.pathExempt || []).map(pathPattern => new UrlPattern(pathPattern));
 
   const pathExempt = urlPatterns
     ? /** @type {(path: string) => boolean} */ (path) => urlPatterns.some(urlPattern => urlPattern.match(path))
@@ -62,7 +62,7 @@ function createPreHandlerHook (options) {
 
   /** @type {import('fastify').preHandlerHookHandler} */
   return async function (request, reply) {
-    debug(`hook called for ${request.url}`)
+    debug(`hook called for ${request.url}`);
 
     const actual = await actualRoles(request) || [];
 
@@ -70,20 +70,20 @@ function createPreHandlerHook (options) {
     let isAuthorized;
 
     if (pathExempt && pathExempt(request.url)) {
-      debug('options.pathExempt does match URL, overriding isAuthorized (setting to true)')
-      isAuthorized = true
+      debug('options.pathExempt does match URL, overriding isAuthorized (setting to true)');
+      isAuthorized = true;
     } else {
-      isAuthorized = checkRoles(actual, allowedRoles || [], options)
+      isAuthorized = checkRoles(actual, allowedRoles || [], options);
     }
 
-    debug('actual: %j', actual)
-    debug('allowed: %j', allowedRoles)
-    debug('isAuthorized: %j', isAuthorized)
+    debug('actual: %j', actual);
+    debug('allowed: %j', allowedRoles);
+    debug('isAuthorized: %j', isAuthorized);
 
     if (!isAuthorized) {
       return reply.send(new HttpError(httpErrorCode));
     }
-  }
+  };
 }
 
 /**
@@ -91,22 +91,22 @@ function createPreHandlerHook (options) {
  * @returns {FastifyAclAuthPlugin}
  */
 export function fastifyAclAuth (options) {
-  debug('aclFactory() called')
+  debug('aclFactory() called');
 
   /** @satisfies {FastifyAclAuthOptions} */
   const instanceOptions = { all: false, ...options };
 
-  debug('instanceOptions: %j', instanceOptions)
+  debug('instanceOptions: %j', instanceOptions);
 
   /** @type {import('fastify').FastifyPluginAsync<FastifyAclAuthPluginOptions>} */
   const plugin = async (fastify, pluginOptions) => {
-    debug('plugin() called')
+    debug('plugin() called');
 
     fastify.addHook('preHandler', createPreHandlerHook({
       ...instanceOptions,
       ...pluginOptions,
-    }))
+    }));
   };
 
-  return fp(plugin, { fastify: '>=4.0.0' })
+  return fp(plugin, { fastify: '>=4.0.0' });
 }

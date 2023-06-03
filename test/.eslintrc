@@ -1,9 +1,0 @@
-{
-  "rules": {
-    "mocha/handle-done-callback": 0,
-    "mocha/no-async-describe": 0,
-    "mocha/no-global-tests": 0,
-    "mocha/no-nested-tests": 0,
-    "node/no-unpublished-require": 0
-  }
-}
