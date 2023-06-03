@@ -3,16 +3,16 @@ import { describe, it } from 'node:test';
 
 import fastify from 'fastify';
 
-import { fastifyAclAuth } from '../index.js';
+import { fastifyAcl } from '../index.js';
 
-const fastifyAclAuthPlugin = fastifyAclAuth({ actualRoles: () => 'user' });
+const fastifyAclPlugin = fastifyAcl({ actualRoles: () => 'user' });
 
 describe('plugin.test.js', () => {
   it('should get actual route when accessing user', async () => {
     const fastifyInstance = fastify();
 
     fastifyInstance.register(async fastifyScope => {
-      fastifyScope.register(fastifyAclAuthPlugin, { allowedRoles: 'user' });
+      fastifyScope.register(fastifyAclPlugin, { allowedRoles: 'user' });
       fastifyScope.get('/user', () => '/user');
     });
 
@@ -28,7 +28,7 @@ describe('plugin.test.js', () => {
     const fastifyInstance = fastify();
 
     fastifyInstance.register(async fastifyScope => {
-      fastifyScope.register(fastifyAclAuthPlugin, { allowedRoles: 'admin' });
+      fastifyScope.register(fastifyAclPlugin, { allowedRoles: 'admin' });
       fastifyScope.get('/admin', () => '/admin');
     });
 

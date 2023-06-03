@@ -1,6 +1,6 @@
 {
-  "name": "@voxpelli/fastify-acl-auth",
-  "version": "2.0.0-4",
+  "name": "@yikesable/fastify-acl",
+  "version": "2.0.0",
   "description": "ACL-like authorization for Fastify apps",
   "type": "module",
   "main": "index.js",
@@ -71,10 +71,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/voxpelli/fastify-acl-auth"
+    "url": "https://github.com/yikesable/fastify-acl"
   },
   "bugs": {
-    "url": "https://github.com/voxpelli/fastify-acl-auth/issues"
+    "url": "https://github.com/yikesable/fastify-acl/issues"
   },
   "keywords": [
     "fastify",

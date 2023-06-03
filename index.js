@@ -5,6 +5,7 @@ import UrlPattern from 'url-pattern';
 import { checkRoles } from './lib/auth.js';
 import { HttpError } from './lib/util.js';
 
+// TODO: Replace with a bunyan-adaptor based setup
 const debug = createDebug('fastify-acl-auth:auth');
 
 /** @typedef {string|ReadonlyArray<string>} Roles */
@@ -16,31 +17,31 @@ const debug = createDebug('fastify-acl-auth:auth');
  */
 
 /**
- * @typedef FastifyAclAuthBaseOptions
+ * @typedef FastifyAclBaseOptions
  * @property {number} [httpErrorCode]
  * @property {ReadonlyArray<string>} [pathExempt]
  */
 
 /**
- * @typedef FastifyAclAuthOnlyOptions
+ * @typedef FastifyAclFactoryOnlyOptions
  * @property {RolesCallback} actualRoles
  * @property {boolean} [all]
  * @property {ReadonlyArray<string>} [hierarchy]
  */
 
 /**
- * @typedef FastifyAclAuthPluginOnlyOptions
+ * @typedef FastifyAclPluginOnlyOptions
  * @property {RolesCallback} [actualRoles]
  * @property {Roles} allowedRoles
  */
 
-/** @typedef {FastifyAclAuthBaseOptions & FastifyAclAuthOnlyOptions} FastifyAclAuthOptions */
-/** @typedef {FastifyAclAuthBaseOptions & FastifyAclAuthPluginOnlyOptions} FastifyAclAuthPluginOptions */
+/** @typedef {FastifyAclBaseOptions & FastifyAclFactoryOnlyOptions} FastifyAclOptions */
+/** @typedef {FastifyAclBaseOptions & FastifyAclPluginOnlyOptions} FastifyAclPluginOptions */
 
-/** @typedef {import('fastify').FastifyPluginAsync<FastifyAclAuthPluginOptions>} FastifyAclAuthPlugin */
+/** @typedef {import('fastify').FastifyPluginAsync<FastifyAclPluginOptions>} FastifyAclPlugin */
 
 /**
- * @param {FastifyAclAuthOptions & FastifyAclAuthPluginOptions} options
+ * @param {FastifyAclOptions & FastifyAclPluginOptions} options
  * @returns {import('fastify').preHandlerHookHandler}
  */
 function createPreHandlerHook (options) {
@@ -85,18 +86,18 @@ function createPreHandlerHook (options) {
 }
 
 /**
- * @param {FastifyAclAuthOptions} options
- * @returns {FastifyAclAuthPlugin}
+ * @param {FastifyAclOptions} options
+ * @returns {FastifyAclPlugin}
  */
-export function fastifyAclAuth (options) {
+export function fastifyAcl (options) {
   debug('aclFactory() called');
 
-  /** @satisfies {FastifyAclAuthOptions} */
+  /** @satisfies {FastifyAclOptions} */
   const instanceOptions = { all: false, ...options };
 
   debug('instanceOptions: %j', instanceOptions);
 
-  /** @type {import('fastify').FastifyPluginAsync<FastifyAclAuthPluginOptions>} */
+  /** @type {import('fastify').FastifyPluginAsync<FastifyAclPluginOptions>} */
   const plugin = async (fastify, pluginOptions) => {
     debug('plugin() called');
 
