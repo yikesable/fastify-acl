@@ -46,7 +46,6 @@
   "devDependencies": {
     "@types/debug": "^4.1.8",
     "@types/node": "^16.18.34",
-    "@types/tap": "^14.10.3",
     "@voxpelli/eslint-config": "^18.0.0",
     "@voxpelli/tsconfig": "^8.0.0",
     "eslint": "^8.42.0",
