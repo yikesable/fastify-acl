@@ -19,9 +19,11 @@
     "clean": "run-p clean:*",
     "prepare": "husky install",
     "prepublishOnly": "run-s build",
-    "test:tap": "tap 'test/**/*.test.js' --cov",
+    "test:node": "node --test test/*.test.js",
     "test-ci": "run-s test:*",
-    "test": "run-s check test:*"
+    "test": "run-s check test:*",
+    "watch:test": "node --test --watch test/*.test.js",
+    "watch": "run-p watch:*"
   },
   "author": "Charles Read",
   "license": "MIT",
@@ -34,7 +36,7 @@
     "lib/**/*.d.ts.map"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=16.17.0"
   },
   "dependencies": {
     "debug": "^4.3.1",
@@ -62,7 +64,6 @@
     "installed-check": "^7.1.1",
     "knip": "^2.13.0",
     "npm-run-all2": "^6.0.5",
-    "tap": "^14.11.0",
     "type-coverage": "^2.26.0",
     "typescript": "~5.1.3"
   },
