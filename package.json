@@ -3,8 +3,8 @@
   "version": "2.0.0-4",
   "description": "ACL-like authorization for Fastify apps",
   "type": "module",
-  "main": "plugin.js",
-  "types": "plugin.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build:0": "run-s clean",
     "build:1-declaration": "tsc -p declaration.tsconfig.json",
@@ -25,7 +25,7 @@
     "watch:test": "node --test --watch test/*.test.js",
     "watch": "run-p watch:*"
   },
-  "author": "Charles Read",
+  "author": "Pelle Wessman <pelle@kodfabrik.se> (http://kodfabrik.se/)",
   "license": "MIT",
   "files": [
     "*.js",

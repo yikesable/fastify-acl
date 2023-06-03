@@ -1,5 +1,3 @@
-// FIXME: Rename file to index.js
-
 import createDebug from 'debug';
 import fp from 'fastify-plugin';
 import UrlPattern from 'url-pattern';

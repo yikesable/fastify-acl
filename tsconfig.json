@@ -1,7 +1,7 @@
 {
   "extends": "@voxpelli/tsconfig/node16.json",
   "files": [
-    "plugin.js"
+    "index.js"
   ],
   "include": [
     "lib/**/*",

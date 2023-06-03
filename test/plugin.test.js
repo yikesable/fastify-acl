@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 
 import fastify from 'fastify';
 
-import { fastifyAclAuth } from '../plugin.js';
+import { fastifyAclAuth } from '../index.js';
 
 const fastifyAclAuthPlugin = fastifyAclAuth({ actualRoles: () => 'user' });
 
