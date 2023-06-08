@@ -98,4 +98,4 @@ fastify.register(fastifyAclPlugin, {
 
 ## See also
 
-* [`@charlesread/fastify-acl-auth`](https://github.com/charlesread/fastify-acl-auth) – the original module this one is forked from
+* [`fastify-acl-auth`](https://github.com/charlesread/fastify-acl-auth) – the original module this one is forked from
