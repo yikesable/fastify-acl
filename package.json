@@ -25,7 +25,7 @@
     "watch:test": "node --test --watch test/*.test.js",
     "watch": "run-p watch:*"
   },
-  "author": "Pelle Wessman <pelle@kodfabrik.se> (http://kodfabrik.se/)",
+  "author": "Pelle Wessman <pelle@yikesable.dev> (https://yikesable.dev/)",
   "license": "MIT",
   "files": [
     "*.js",
