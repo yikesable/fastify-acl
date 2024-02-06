@@ -62,7 +62,7 @@
     "husky": "^8.0.3",
     "installed-check": "^7.1.1",
     "knip": "^2.13.0",
-    "npm-run-all2": "^6.0.5",
+    "npm-run-all2": "^6.1.2",
     "type-coverage": "^2.26.0",
     "typescript": "~5.1.3"
   },
